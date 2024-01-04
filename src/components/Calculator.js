@@ -30,7 +30,7 @@ function Calculator() {
 
     try {
         if(checkResult === "0/0"){
-            setDisplayValue("Nan");
+            setDisplayValue("NaN");
             setIsResult(true);
         }
         else if(checkResult === ""){
