@@ -1,79 +1,64 @@
-import React from "react";
+import React, {useState} from "react";
 import "./style.css";
 import Display from "./Display";
 import Keypad from "./Keypad";
 
-class Calculator extends React.Component {
-  state = {
-    displayValue: "",
-    isResult:false,
-  };
+function Calculator() {
+    const [displayValue, setDisplayValue] = useState("");
+    const [isResult, setIsResult] = useState(false);
 
-  handleClick = (value) => {
+  const handleClick = (value) => {
     if(value === "="){
-        this.calculate();
+        calculate();
     }
     else if(value === "C"){
-        this.reset();
+        reset();
     }
     else{
-        this.setState((prevState) => ({
-            displayValue: prevState.displayValue + value,
-        }));
+        setDisplayValue((prevDisplayValue) => (prevDisplayValue + value));
     }
     
   };
 
-  calculate = () => {
+  const calculate = () => {
     var checkResult = ''
-    if(this.state.displayValue.includes('--')) {
-      checkResult = this.state.displayValue.replace('--', '+')
+    if(displayValue.includes('--')) {
+      checkResult = displayValue.replace('--', '+')
     } else {
-      checkResult = this.state.displayValue;
+      checkResult = displayValue;
     }
 
     try {
         if(checkResult === "0/0"){
-            this.setState({
-                displayValue: "NaN",
-                isResult: true,
-            })
+            setDisplayValue("Nan");
+            setIsResult(true);
         }
         else if(checkResult === ""){
-            this.setState({
-                displayValue: "Error",
-                isResult: true,
-            })
+            setDisplayValue("Error");
+            setIsResult(true);
         }
         else{
-            this.setState({
-                displayValue: (eval(checkResult) || "") + "",
-                isResult: true,
-            })
+            setDisplayValue((eval(checkResult) || "") + "");
+            setIsResult(true);
         }
     } catch(e) {
-        this.setState({
-            displayValue: "error"
-        })
+        setDisplayValue("error");
     }
   };
 
-  reset = () => {
-    this.setState({
-        displayValue: ""
-    })
+  const reset = () => {
+    setDisplayValue("");
+    setIsResult(false);
   };
 
-  render() {
     return (
       <div className="calculator">
         <h1>React Calculator</h1>
-        <Display value={this.state.displayValue} />
-        {this.state.isResult && <p>{this.state.displayValue}</p>}
-        <Keypad onClick={this.handleClick} />
+        <Display value={displayValue} />
+        {isResult && <p>{displayValue}</p>}
+        <Keypad onClick={handleClick} />
       </div>
-    );
-  }
-}
+    )
+    }
 
 export default Calculator;
